@@ -1,0 +1,24 @@
+import { useGame } from "../../context/TicTacToe/GameContext";
+import { socket } from "../../services/socket";
+
+const Board = () => {
+  const { board, turn, playerSymbol, roomId } = useGame();
+
+  const handleClick = (index) => {
+    if (turn !== playerSymbol) return;
+
+    socket.emit("make_move", { roomId, index });
+  };
+
+  return (
+    <div className="grid grid-cols-3 gap-3 bg-gray-800 p-4 rounded-xl shadow-lg">
+      {board.map((cell, i) => (
+        <div key={i} onClick={() => handleClick(i)} className="w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer hover:bg-gray-600 transition">
+          {cell}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Board;

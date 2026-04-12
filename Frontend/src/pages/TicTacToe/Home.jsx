@@ -1,0 +1,47 @@
+import { socket } from "../../services/socket";
+import { useGame } from "../../context/TicTacToe/GameContext";
+import { useNavigate } from "react-router-dom";
+import useSocket from "../../hooks/useSocket";
+import { useState } from "react";
+
+const Home = () => {
+  const { username, setRoomId, setPlayerSymbol } = useGame();
+  const [searching, setSearching] = useState(false);
+  const navigate = useNavigate();
+  const handleStart = () => {
+    setSearching(true);
+    socket.emit("find_match", { username });
+  };
+
+  useSocket("match_found", (data) => {
+    setRoomId(data.roomId);
+
+    const me = data.players.find((p) => p.socketId === socket.id);
+    setPlayerSymbol(me.symbol);
+
+    navigate("/TicTacToe/Game");
+  });
+
+  return (
+    <div className="h-screen items-center justify-center bg-gray-900 text-white">
+      <h1 className="p-4 text-4xl font-bold mb-6">Welcome {username}</h1>
+      <div className="h-screen flex items-center justify-center bg-gray-900 text-white">
+        {!searching ? (
+          <button
+            onClick={handleStart}
+            className="bg-green-500 px-6 py-3 rounded-xl"
+          >
+            Start Playing
+          </button>
+        ) : (
+          <div className="text-center">
+            <h2 className="text-xl">Finding Opponent...</h2>
+            <div className="mt-4 animate-pulse">⏳</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
