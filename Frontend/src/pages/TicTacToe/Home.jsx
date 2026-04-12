@@ -5,16 +5,19 @@ import useSocket from "../../hooks/useSocket";
 import { useState } from "react";
 
 const Home = () => {
-  const { username, setRoomId, setPlayerSymbol } = useGame();
+  const { username, setRoomId, setPlayerSymbol, setUsername } = useGame();
   const [searching, setSearching] = useState(false);
   const navigate = useNavigate();
   const handleStart = () => {
     setSearching(true);
-    socket.emit("find_match", { username });
+    console.log("Emitting find_match for username:", username);
+    setUsername(username);
+    socket.emit("find_match", {username});
   };
 
   useSocket("match_found", (data) => {
     setRoomId(data.roomId);
+    console.log("Match found:", data);
 
     const me = data.players.find((p) => p.socketId === socket.id);
     setPlayerSymbol(me.symbol);
