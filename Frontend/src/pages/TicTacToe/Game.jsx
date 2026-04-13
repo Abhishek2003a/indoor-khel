@@ -16,13 +16,12 @@ const Game = () => {
       {/* 🔝 Player Info */}
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold">Tic Tac Toe</h1>
-
         <p className="mt-2">
           You are: <span className="font-bold">{playerSymbol}</span>
-        </p>
+        </p>Symbol: "O",
 
-        <p className={`mt-2 text-lg ${isMyTurn ? "text-green-400" : "text-red-400"}`}>
-          {isMyTurn ? "Your Turn 🟢" : "Opponent Turn 🔴"}
+        <p className={`mt-2 text-lg ${turn ? "text-green-400" : "text-red-400"}`}>
+          {turn ? "Your Turn 🟢" : "Opponent Turn 🔴"}
         </p>
       </div>
 
