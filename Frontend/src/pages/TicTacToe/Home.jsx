@@ -5,14 +5,22 @@ import useSocket from "../../hooks/useSocket";
 import { useState } from "react";
 
 const Home = () => {
-  const { username, setRoomId, setPlayerSymbol, setUsername } = useGame();
+  const {
+    username,
+    setRoomId,
+    setPlayerSymbol,
+    setBoard,
+    setUsername,
+    setWinner,
+    setTurn,
+  } = useGame();
   const [searching, setSearching] = useState(false);
   const navigate = useNavigate();
   const handleStart = () => {
     setSearching(true);
     console.log("Emitting find_match for username:", username);
     setUsername(username);
-    socket.emit("find_match", {username});
+    socket.emit("find_match", { username });
   };
 
   useSocket("match_found", (data) => {
@@ -21,7 +29,10 @@ const Home = () => {
 
     const me = data.players.find((p) => p.socketId === socket.id);
     setPlayerSymbol(me.symbol);
-
+    setTurn(me.turn);
+    setWinner(null);
+    setBoard(data.board);
+    console.log("All Set! Navigating to game with roomId:", data.roomId);
     navigate("/TicTacToe/Game");
   });
 
