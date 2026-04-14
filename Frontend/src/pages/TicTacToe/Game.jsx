@@ -3,8 +3,18 @@ import useSocket from "../../hooks/useSocket";
 import Board from "../../components/TicTacToe/Board";
 import Chat from "../../components/TicTacToe/Chat";
 import { socket } from "../../services/socket";
+import { use } from "react";
+
 const Game = () => {
-  const { setBoard, turn, setTurn, playerSymbol, username } = useGame();
+  const {
+    setBoard,
+    turn,
+    setTurn,
+    playerSymbol,
+    username,
+    messages,
+    setMessages,
+  } = useGame();
 
   useSocket("move_made", (game) => {
     console.log("Received move_made:", game);
@@ -16,11 +26,18 @@ const Game = () => {
     }
   });
 
-  useSocket("game_over", ({ winner, board }) => {
-    if (winner) alert(`Game Over! Winner: ${username}`);
+  useSocket("game_over", ({ winner, board, symbol }) => {
+    if (winner)
+      alert(
+        `Game Over! Winner: ${playerSymbol === symbol ? "You" : "Opponent"}`,
+      );
     else alert("Game Over! It's a draw!");
     setBoard(board);
     setTurn(false);
+  });
+  useSocket("Message_Updated", (data) => {
+    console.log("Received Message_Updated:", data.messages);
+    setMessages(data.messages);
   });
 
   return (

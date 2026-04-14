@@ -10,6 +10,7 @@ export const GameProvider = ({ children }) => {
   const [board, setBoard] = useState(Array(9).fill(""));
   const [turn, setTurn] = useState("X");
   const [winner, setWinner] = useState(null);
+  const [messages, setMessages] = useState([]);
 
   return (
     <GameContext.Provider
@@ -26,6 +27,8 @@ export const GameProvider = ({ children }) => {
         setTurn,
         winner,
         setWinner,
+        messages,
+        setMessages,
       }}
     >
       {children}

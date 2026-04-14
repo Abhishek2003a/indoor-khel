@@ -24,6 +24,23 @@ io.on("connection", (socket) => {
   console.log("New user connected:", socket.id);
   socket.on("find_match", (data) => FindMatchHandler(data, socket));
   socket.on("make_move", (data) => MakeMove(data, socket));
+  socket.on("send_message", ({ msg, roomId }) => {
+    console.log(
+      "Received send_message from:",
+      socket.id,
+      "with data:",
+      msg,
+      "roomId:",
+      // roomId,"previous messages:", rooms[roomId]?.messages
+    );
+
+    if (roomId) {
+      rooms[roomId].messages = [...rooms[roomId]?.messages, msg];
+      io.to(roomId).emit("Message_Updated", {
+        messages: rooms[roomId].messages,
+      });
+    }
+  });
 
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
@@ -51,6 +68,7 @@ const FindMatchHandler = async (data, socket) => {
 
     rooms[roomId] = {
       board: Array(9).fill(""),
+      messages: [],
       players: [
         waitingPlayer,
         {
@@ -96,7 +114,11 @@ const MakeMove = (data, socket) => {
   room.board[index] = player.symbol;
   const winner = checkWinner(room.board);
   if (winner != null) {
-    io.to(roomId).emit("game_over", { winner: winner, board: room.board });
+    io.to(roomId).emit("game_over", {
+      winner: winner,
+      board: room.board,
+      symbol: player.symbol,
+    });
     delete rooms[roomId];
     return;
   } else {
