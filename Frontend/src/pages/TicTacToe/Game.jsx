@@ -4,6 +4,7 @@ import Board from "../../components/TicTacToe/Board";
 import Chat from "../../components/TicTacToe/Chat";
 import { socket } from "../../services/socket";
 import { use } from "react";
+import PlayAgain from "../../components/TicTacToe/PlayAgain";
 
 const Game = () => {
   const {
@@ -14,6 +15,8 @@ const Game = () => {
     username,
     messages,
     setMessages,
+    playAgain,
+    setPlayAgain,
   } = useGame();
 
   useSocket("move_made", (game) => {
@@ -31,13 +34,12 @@ const Game = () => {
       alert(
         `Game Over! Winner: ${playerSymbol === symbol ? "You" : "Opponent"}`,
       );
-    else alert("Game Over! It's a draw!");
+    else {
+      alert("Game Over! It's a draw!");
+      setPlayAgain(true);
+    }
     setBoard(board);
     setTurn(false);
-  });
-  useSocket("Message_Updated", (data) => {
-    console.log("Received Message_Updated:", data.messages);
-    setMessages(data.messages);
   });
 
   return (
@@ -55,7 +57,6 @@ const Game = () => {
           {turn ? "Your Turn 🟢" : "Opponent Turn 🔴"}
         </p>
       </div>
-
       {/* 🔥 Main Layout */}
       <div className="flex gap-10">
         {/* 🎮 Board */}
@@ -64,6 +65,7 @@ const Game = () => {
         {/* 💬 Chat (optional) */}
         <Chat />
       </div>
+      {playAgain && <PlayAgain />}
     </div>
   );
 };

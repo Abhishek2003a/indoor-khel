@@ -30,12 +30,14 @@ io.on("connection", (socket) => {
       socket.id,
       "with data:",
       msg,
-      "roomId:",
+      "roomId: ",
+      rooms[roomId]?.messages,
       // roomId,"previous messages:", rooms[roomId]?.messages
     );
 
     if (roomId) {
-      rooms[roomId].messages = [...rooms[roomId]?.messages, msg];
+      rooms[roomId].messages=[...(rooms[roomId].messages || []), {socket:socket.id, msg:msg}];
+            
       io.to(roomId).emit("Message_Updated", {
         messages: rooms[roomId].messages,
       });

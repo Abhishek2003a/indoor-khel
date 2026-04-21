@@ -11,6 +11,7 @@ export const GameProvider = ({ children }) => {
   const [turn, setTurn] = useState("X");
   const [winner, setWinner] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [playAgain, setPlayAgain] = useState(false);
 
   return (
     <GameContext.Provider
@@ -29,6 +30,8 @@ export const GameProvider = ({ children }) => {
         setWinner,
         messages,
         setMessages,
+        playAgain,
+        setPlayAgain,
       }}
     >
       {children}
