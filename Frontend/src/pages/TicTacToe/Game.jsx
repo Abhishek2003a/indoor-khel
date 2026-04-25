@@ -4,7 +4,9 @@ import Board from "../../components/TicTacToe/Board";
 import Chat from "../../components/TicTacToe/Chat";
 import { socket } from "../../services/socket";
 import { use } from "react";
-import PlayAgain from "../../components/TicTacToe/PlayAgain";
+import { useNavigate } from "react-router-dom";
+import WinnerCard from "../../components/TicTacToe/WinnerCard";
+import { useState } from "react";
 
 const Game = () => {
   const {
@@ -17,6 +19,14 @@ const Game = () => {
     setMessages,
     playAgain,
     setPlayAgain,
+    winner,
+    setWinner,
+    winnerName,
+    setWinnerName,
+    searching,
+    setSearching,
+    winnerSymbol,
+    setWinnerSymbol,
   } = useGame();
 
   useSocket("move_made", (game) => {
@@ -28,23 +38,23 @@ const Game = () => {
       setTurn(false);
     }
   });
-
-  useSocket("game_over", ({ winner, board, symbol }) => {
-    if (winner)
-      alert(
-        `Game Over! Winner: ${playerSymbol === symbol ? "You" : "Opponent"}`,
-      );
-    else {
-      alert("Game Over! It's a draw!");
-      setPlayAgain(true);
-    }
+  useSocket("game_over", ({ winner, board, winner_symbol, winnername }) => {
+    setWinner(winner);
+    setWinnerName(winnername);
     setBoard(board);
+    setWinnerSymbol(winner_symbol);
     setTurn(false);
   });
 
+  const Navigate = useNavigate();
+  const handleRestart = () => {
+    setSearching(true);
+    socket.emit("find_match", { username });
+    Navigate(-1);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-      {/* 🔝 Player Info */}
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold">Tic Tac Toe</h1>
         <p className="mt-2">
@@ -57,15 +67,16 @@ const Game = () => {
           {turn ? "Your Turn 🟢" : "Opponent Turn 🔴"}
         </p>
       </div>
-      {/* 🔥 Main Layout */}
-      <div className="flex gap-10">
-        {/* 🎮 Board */}
-        <Board />
-
-        {/* 💬 Chat (optional) */}
-        <Chat />
-      </div>
-      {playAgain && <PlayAgain />}
+      {winner ? (
+        <WinnerCard onRestart={handleRestart} />
+      ) : (
+        <div className="flex gap-10">
+          {/* 🎮 Board */}
+          <Board />
+          {/* 💬 Chat (optional) */}
+          <Chat />
+        </div>
+      )}
     </div>
   );
 };

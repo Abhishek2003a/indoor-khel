@@ -13,8 +13,9 @@ const Home = () => {
     setUsername,
     setWinner,
     setTurn,
+    searching,
+    setSearching,
   } = useGame();
-  const [searching, setSearching] = useState(false);
   const navigate = useNavigate();
   const handleStart = () => {
     setSearching(true);
@@ -33,6 +34,7 @@ const Home = () => {
     setWinner(null);
     setBoard(data.board);
     console.log("All Set! Navigating to game with roomId:", data.roomId);
+    setSearching(false);
     navigate("/TicTacToe/Game");
   });
 
