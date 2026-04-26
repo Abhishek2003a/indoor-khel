@@ -3,9 +3,11 @@ import { useGame } from "../../context/TicTacToe/GameContext";
 import { useNavigate } from "react-router-dom";
 import useSocket from "../../hooks/useSocket";
 import { useState } from "react";
+import { use } from "react";
 
 const Home = () => {
   const {
+    setMessages,
     username,
     setRoomId,
     setPlayerSymbol,
@@ -18,21 +20,24 @@ const Home = () => {
   } = useGame();
   const navigate = useNavigate();
   const handleStart = () => {
-    setSearching(true);
     console.log("Emitting find_match for username:", username);
     setUsername(username);
     socket.emit("find_match", { username });
   };
+  useSocket("waiting", () => {
+    console.log("waiting for other player...");
+    setSearching(true);
+  });
 
   useSocket("match_found", (data) => {
     setRoomId(data.roomId);
+    setMessages(data.messages);
+    setBoard(data.board);
     console.log("Match found:", data);
-
     const me = data.players.find((p) => p.socketId === socket.id);
     setPlayerSymbol(me.symbol);
     setTurn(me.turn);
     setWinner(null);
-    setBoard(data.board);
     console.log("All Set! Navigating to game with roomId:", data.roomId);
     setSearching(false);
     navigate("/TicTacToe/Game");

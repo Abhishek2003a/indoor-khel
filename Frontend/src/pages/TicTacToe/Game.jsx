@@ -48,9 +48,10 @@ const Game = () => {
 
   const Navigate = useNavigate();
   const handleRestart = () => {
-    setSearching(true);
+    console.log("Restarting game...");
     socket.emit("find_match", { username });
-    Navigate(-1);
+    setSearching(true);
+    Navigate("../TicTacToe/Home");
   };
 
   return (

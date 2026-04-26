@@ -4,8 +4,7 @@ import { useGame } from "../../context/TicTacToe/GameContext";
 import useSocket from "../../hooks/useSocket";
 const Chat = () => {
   const [msg, setMsg] = useState("");
-  const { imessages, setImessages, roomId } = useGame();
-  const { messages, setMessages } = useGame();
+  const { messages, setMessages, roomId } = useGame();
 
   const sendMessage = () => {
     if (!msg) return;
