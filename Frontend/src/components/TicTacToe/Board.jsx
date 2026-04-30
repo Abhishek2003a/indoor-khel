@@ -19,8 +19,8 @@ const Board = () => {
           // className="w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer hover:bg-gray-600 transition"
           className={
             cell === "" && turn
-              ? "w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer hover:bg-gray-600 transition"
-              : "w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-not-allowed hover:bg-gray-700 transition"
+              ? "w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-pointer hover:bg-gray-600 transition rounded-md"
+              : "w-24 h-24 bg-gray-700 flex items-center justify-center text-3xl font-bold cursor-not-allowed hover:bg-gray-700 transition rounded-md"
           }
         >
           {cell}

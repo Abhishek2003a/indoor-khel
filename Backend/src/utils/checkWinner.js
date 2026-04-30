@@ -1,4 +1,3 @@
-
 const checkWinner = (board) => {
   const winPatterns = [
     [0, 1, 2],

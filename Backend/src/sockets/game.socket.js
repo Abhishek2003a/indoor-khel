@@ -1,41 +1,41 @@
 // sockets/game.socket.js
-const { rooms } = require("../store/memory.store");
+const store = require("../store/memory.store");
 const checkWinner = require("../utils/checkWinner");
 
 const gameHandler = (socket, io) => {
-  console.log("Game handler initialized for socket:", socket.id);
   socket.on("make_move", ({ roomId, index }) => {
-    const room = rooms[roomId];
-    if (!room) return;
+    const room = store.rooms[roomId];
+    if (!room || room.status !== "active") return;
 
-    const player = room.players.find(p => p.socketId === socket.id);
+    const player = room.players.find((p) => p.socketId === socket.id);
     if (!player || !player.turn) return;
-
     if (room.board[index] !== "") return;
 
     room.board[index] = player.symbol;
 
-    // winner logic yaha call karega
-    const winner = checkWinner(room.board);
-    if (winner != null) {
+    const result = checkWinner(room.board);
+    if (result !== null) {
+      // result === true → someone won; result === false → draw
+      clearInterval(room.timerInterval);
+      const winner = result ? player : null;
       io.to(roomId).emit("game_over", {
-        winner: winner,
+        winner: result,
         board: room.board,
-        winner_symbol: player.symbol,
-        winnername: player.symbol === room.players[0].symbol ? room.players[0].username : room.players[1].username,
+        winner_symbol: result ? player.symbol : null,
+        winnername: result ? player.username : null,
+        reason: result ? "win" : "draw",
       });
-      delete rooms[roomId];
-      waitingPlayer = null;
+      if (room.code) delete store.privateCodes[room.code];
+      delete store.rooms[roomId];
       return;
-    } else {
-      room.players.forEach(p => p.turn = !p.turn);
     }
+
+    room.players.forEach((p) => (p.turn = !p.turn));
     io.to(roomId).emit("move_made", {
       board: room.board,
       players: room.players,
     });
   });
-
 };
 
 module.exports = gameHandler;
