@@ -1,0 +1,85 @@
+# =========================
+# ROOT LEVEL
+# =========================
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+
+# =========================
+# BACKEND (Node.js)
+# =========================
+
+backend/node_modules/
+backend/.env
+backend/dist/
+backend/build/
+
+# Optional: if using uploads/temp files
+backend/uploads/
+backend/tmp/
+
+# =========================
+# FRONTEND (React)
+# =========================
+
+frontend/node_modules/
+frontend/.env
+frontend/build/
+frontend/dist/
+
+# React specific
+frontend/.cache/
+frontend/.parcel-cache/
+
+# =========================
+# DATABASE / MISC
+# =========================
+
+# MongoDB local files (if any)
+*.db
+*.sqlite
+
+# Redis dump (if used)
+dump.rdb
+
+# =========================
+# TESTING
+# =========================
+
+coverage/
+.nyc_output/
+
+# =========================
+# TYPESCRIPT (if used)
+# =========================
+
+*.tsbuildinfo
+
+# =========================
+# MISC
+# =========================
+
+# Temporary files
+*.tmp
+*.temp
+
+# Secrets / keys
+*.pem
+*.key

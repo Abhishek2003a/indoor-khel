@@ -1,11 +1,14 @@
-import {GameProvider}  from "./context/TicTacToe/GameContext";
+import { AuthProvider } from "./context/AuthContext";
+import { GameProvider } from "./context/TicTacToe/GameContext";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
-    <GameProvider>
-      <AppRoutes />
-    </GameProvider>
+    <AuthProvider>
+      <GameProvider>
+        <AppRoutes />
+      </GameProvider>
+    </AuthProvider>
   );
 }
 
