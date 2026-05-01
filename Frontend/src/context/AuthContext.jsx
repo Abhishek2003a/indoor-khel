@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { reconnectSocket } from "../services/socket";
-
+import API_URL from "../config/api";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async ({ username, password }) => {
-    const res = await fetch("http://localhost:3000/api/auth/login", {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async ({ username, password }) => {
-    const res = await fetch("http://localhost:3000/api/auth/signup", {
+    const res = await fetch(`${API_URL}/api/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     if (user?.refreshToken) {
       try {
-        await fetch("http://localhost:3000/api/auth/logout", {
+        await fetch(`${API_URL}/api/auth/logout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ refreshToken: user.refreshToken }),

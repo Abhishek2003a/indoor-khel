@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-
+import API_URL from "../config/api";
 const getStoredToken = () => {
   try {
     return JSON.parse(localStorage.getItem("auth") || "{}").accessToken || null;
@@ -8,7 +8,7 @@ const getStoredToken = () => {
   }
 };
 
-export const socket = io("http://localhost:3000", {
+export const socket = io(API_URL, {
   auth: { token: getStoredToken() },
 });
 
