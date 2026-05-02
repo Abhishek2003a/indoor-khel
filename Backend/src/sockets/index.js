@@ -24,7 +24,7 @@ const initSockets = (io) => {
 
   io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id} | user: ${socket.user?.userId || "guest"}`);
-
+    
     roomHandler(socket, io);  // authenticated room creation/join/leave
     matchHandler(socket, io); // guest public matchmaking (find_match)
     gameHandler(socket, io);  // move handling (shared)
